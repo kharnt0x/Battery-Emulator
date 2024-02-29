@@ -13,6 +13,9 @@ unsigned long ota_progress_millis = 0;
 #include "events_html.h"
 #include "index_html.cpp"
 #include "settings_html.h"
+#ifdef TESLA_MODEL_3_BATTERY
+#include "tesla_html.h"
+#endif
 
 enum WifiState {
   INIT,          //before connecting first time
@@ -57,6 +60,27 @@ void init_webserver() {
   server.on("/cellmonitor", HTTP_GET, [](AsyncWebServerRequest* request) {
     request->send_P(200, "text/html", index_html, cellmonitor_processor);
   });
+
+#ifdef TESLA_MODEL_3_BATTERY
+  // Route for going to tesla web page
+  server.on("/tesla", HTTP_GET,
+            [](AsyncWebServerRequest* request) { request->send_P(200, "text/html", index_html, tesla_processor); });
+
+  server.on("/tesla_updateForceOpenContactors", HTTP_GET, [](AsyncWebServerRequest* request) {
+    if (request->hasParam("value")) {
+      String value = request->getParam("value")->value();
+      force_open_contactors(value.toInt());
+      request->send(200, "text/plain", "Updated successfully");
+    } else {
+      request->send(400, "text/plain", "Bad Request");
+    }
+  });
+
+  server.on("/tesla_clearcellfaults", HTTP_GET, [](AsyncWebServerRequest* request) {
+    clear_cell_faults();
+    request->send(200, "text/plain", "Updated successfully");
+  });
+#endif
 
   // Route for going to event log web page
   server.on("/events", HTTP_GET,
@@ -611,12 +635,19 @@ String processor(const String& var) {
     content += " ";
     content += "<button onclick='goToEventsPage()'>Events</button>";
     content += " ";
+#ifdef TESLA_MODEL_3_BATTERY
+    content += "<button onclick='goToTeslaPage()'>Tesla</button>";
+    content += " ";
+#endif
     content += "<button onclick='promptToReboot()'>Reboot Emulator</button>";
     content += "<script>";
     content += "function goToUpdatePage() { window.location.href = '/update'; }";
     content += "function goToCellmonitorPage() { window.location.href = '/cellmonitor'; }";
     content += "function goToSettingsPage() { window.location.href = '/settings'; }";
     content += "function goToEventsPage() { window.location.href = '/events'; }";
+#ifdef TESLA_MODEL_3_BATTERY
+    content += "function goToTeslaPage() { window.location.href = '/tesla'; }";
+#endif
     content +=
         "function promptToReboot() { if (window.confirm('Are you sure you want to reboot the emulator? NOTE: If "
         "emulator is handling contactors, they will open during reboot!')) { "

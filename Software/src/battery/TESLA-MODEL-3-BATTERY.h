@@ -38,6 +38,54 @@ extern bool batteryAllowsContactorClosing;                 //Bool, 1=true, 0=fal
 extern bool inverterAllowsContactorClosing;                //Bool, 1=true, 0=false
 extern bool system_LFP_Chemistry;                          //Bool, 1=true, 0=false
 
+extern bool forceOpenContactors;  // This is used to force the contactors open, used for testing
+
+extern uint32_t total_discharge;
+extern uint32_t total_charge;
+extern uint16_t volts;
+extern int16_t amps;
+extern int16_t power;
+extern uint16_t raw_amps;
+extern int16_t max_temp;
+extern int16_t min_temp;
+extern uint16_t energy_buffer;
+extern uint16_t energy_to_charge_complete;
+extern uint16_t expected_energy_remaining;
+extern uint8_t full_charge_complete;
+extern uint16_t ideal_energy_remaining;
+extern uint16_t nominal_energy_remaining;
+extern uint16_t nominal_full_pack_energy;
+extern uint16_t bat_beginning_of_life;
+extern uint16_t battery_charge_time_remaining;
+extern uint16_t regenerative_limit;
+extern uint16_t discharge_limit;
+extern uint16_t max_heat_park;
+extern uint16_t hvac_max_power;
+extern uint16_t max_discharge_current;
+extern uint16_t max_charge_current;
+extern uint16_t bms_max_voltage;
+extern uint16_t bms_min_voltage;
+extern uint16_t high_voltage;
+extern uint16_t low_voltage;
+extern uint16_t output_current;
+extern uint16_t soc_min;
+extern uint16_t soc_max;
+extern uint16_t soc_vi;
+extern uint16_t soc_ave;
+extern uint16_t cell_max_v;
+extern uint16_t cell_min_v;
+extern uint16_t cell_deviation_mV;
+extern uint8_t max_vno;
+extern uint8_t min_vno;
+extern uint8_t contactor;
+extern uint8_t hvil_status;
+extern uint8_t packContNegativeState;
+extern uint8_t packContPositiveState;
+extern uint8_t packContactorSetState;
+extern uint8_t packCtrsClosingAllowed;
+extern uint8_t pyroTestInProgress;
+extern uint8_t send221still;
+
 void printFaultCodesIfActive();
 void printDebugIfActive(uint8_t symbol, const char* message);
 void print_int_with_units(char* header, int value, char* units);
